@@ -1,4 +1,4 @@
-These files are for educational use only!
+These files are for educational and non-commercial use only!
 Read the license LICENSE.TXT
 
 Downloaded from https://github.com/hacksysteam/WRK-1.2
