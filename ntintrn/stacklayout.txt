@@ -1,0 +1,35 @@
+Example for a proper stack layout on x86-64
+
+...			...				> Continued stack of c...
+0x000000B3BAFAFF58	ret_addr_c			> Address of instruction immediately following the "call c" instruction
+
+0x000000B3BAFAFF60	homing_param1(rcx)_c		\
+0x000000B3BAFAFF68	homing_param2(rdx)_c		|
+0x000000B3BAFAFF70	homing_param3(r8)_c		| Shadow space for b, normally used to save rcx...r9, always 32 bytes
+0x000000B3BAFAFF78	homing_param4(r9)_c		/
+
+0x000000B3BAFAFF80	param5_c			> 5th argument to function c (e.g. 1 ulonglong)
+-----------------------------------------------------------END frame of b
+0x000000B3BAFAFF88	var2_b				\
+0x000000B3BAFAFF90	var1_b				/ Local variables ("locals") of function b
+
+0x000000B3BAFAFF98	rsi_b				\
+0x000000B3BAFAFFA0	rbx_b				/ Saved nonvolatile registers	(due to "push rbx")
+
+0x000000B3BAFAFFA8	ret_addr_b			> Address of instruction immediately following the "call b" instruction
+
+0x000000B3BAFAFFB0	homing_param1(rcx)_b		\
+0x000000B3BAFAFFB8	homing_param2(rdx)_b		|
+0x000000B3BAFAFFC0	homing_param3(r8)_b		| Shadow space for b, normally used to save rcx...r9, always 32 bytes
+0x000000B3BAFAFFC8	homing_param4(r9)_b		/
+
+0x000000B3BAFAFFD0	param5_b			\
+0x000000B3BAFAFFD8	param6_b			| 4+n'th arguments to function b (e.g. 3 ulonglongs)
+0x000000B3BAFAFFE0	param7_b			/
+-----------------------------------------------------------BEGIN frame of b
+0x000000B3BAFAFFE8	var1_a (ulong) | var2_a	(ulong)	> Local variables ("locals") of function a (e.g. 2 ulongs)
+
+0x000000B3BAFAFFF0	rbx_a				> Saved nonvolatile registers	(due to "push rbx")
+
+0x000000B3BAFAFFF8	ret_addr_a			> Address of instruction immediately following the "call a" instruction
+0x000000B3BAFB0000	????????????????		> Foreign memory

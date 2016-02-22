@@ -1,0 +1,49 @@
+how to write proper x64 std asm:
+push rbx
+sub rsp, 0x50
+mov rcx, bla
+mov rdx, ble
+mov r8, bli
+mov r9, blo
+mov ?ptr [rsp+0x20], blu
+lea rbx, [rsp+40]
+mov [rsp+0x28], rbx
+mov ?ptr[rsp+0x30], blabla
+call myfunc
+add rsp, 0x50
+pop rbx
+ret
+
+myfunc:
+mov [rsp+0x20], rcx
+mov [rsp+0x18], rdx
+mov [rsp+0x10], r8
+mov [rsp+0x8], r9
+push rbp
+push rsi
+push rdi
+sub rsp, 0x360
+do anything
+add rsp, 0x360
+pop rdi
+pop rsi
+pop rbp
+ret
+
+GENERIC SYSCALL INTERFACE tested & working for 0 to 12+ params:
+C: NTSTATUS syscallStub(ULONG syscallNr, ...);
+
+syscallStub PROC
+	mov eax, ecx
+	mov r10, rdx
+	mov rdx, r8
+	mov r8, r9
+	mov r9, qword ptr[rsp+28h]
+	add rsp, 8h
+	nop
+	syscall
+	sub rsp, 8h
+	ret
+syscallStub ENDP
+
+we can find NtUnmapViewOfSection by its ntstatus 0x19 STATUS_NOT_MAPPED_VIEW.
