@@ -1,0 +1,64 @@
+===ntoskrnl.exe unexpectedly showing up in explorer.exe loaded module list===
+At least when running Windows 10 10240 or 10586 if we list the loaded modules of explorer.exe
+we notice it has loaded "ntoskrnl.exe" after a while. This is somewhat unexpected since ntoskrnl.exe
+is the Windows kernel and there doesn't exist any obvious reason, except maybe in case
+of a security breach, for it to be loaded into explorer.exe.
+Most of ntoskrnl.exe code is code that can only be executed in ring 0 mode anyways.
+
+The root cause of this behavior is the "Windows.Internal.Shell.Broker.dll" file which is statically
+linked against ntoskrnl.exe in order to import the HviGetHypervisorFeatures, HviIsAnyHypervisorPresent, and _purecall
+functions. All three functions don't contain any instructions which can't be executed in user mode.
+
+We can block loading of ntoskrnl.exe without encountering any side effects by installing a pre-callback on NtOpenFile
+and NtCreateFile which checks file name for substring "ntoskrnl" and if found performs the following operations:
+
+--> Set IO_STATUS_BLOCK::Information to 0
+--> Set IO_STATUS_BLOCK::Status to STATUS_OBJECT_NAME_NOT_FOUND
+--> Set hFile to NULL
+--> Return "STATUS_OBJECT_NAME_NOT_FOUND"
+
+
+Anti telemetry and "senseless forced maintenance"
+-DeviceCensus
+-CompatTelRunner
+-SearchFilterHost
+-SearchIndexer
+-SearchProtocolHost
+-Bt???
+-MRT
+-MpCmdRun
+-cleanmgr
+-Defrag
+-SkypeHost (cannot be renamed in WindowsApps folder --> must be deleted instead)
+
+
+Further thoughts on telemetry and maintenance:
+- Schedule service provides maintenance, but it cannot be disabled using msconfig, and it cannot be stopped using Windows APIs.
+	But in registry we may rename value "Type" to "PsProcessType" and "Start" to "DriverStartIo" effectively preventing it from running.
+
+- Disabling everything related to telemetry in gpedit does not do much, we must disable all related services using above method instead.
+  Disabling WER does not show any differences upon program crash.
+  Programs/key names that can be disabled without side effects as follows:
+	DiagTrack
+	MessagingService
+	OneSyncSvc
+	PcaSvc
+	PimIndexMaintenanceSvc
+	Schedule
+	TieringEngineService	
+	UnistoreSvc
+	UserDataSvc
+	WbioSvc
+	wercplsupport
+	WerSvc
+	
+  Services listed below must not be touched and are needed for OS operation so far.
+	CoreMessagingRegistrar
+	tiledatamodelsvc
+	
+
+Apps:
+Many built-in apps can be uninstalled doing a right click on the app icon in Start menu --> all apps list.
+for 90 % remaining apps: http://www.howtogeek.com/224798/how-to-uninstall-windows-10s-built-in-apps-and-how-to-reinstall-them/
+--> power shell.
+	

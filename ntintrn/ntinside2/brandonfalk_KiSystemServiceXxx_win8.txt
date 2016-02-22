@@ -1,0 +1,397 @@
+.text:00000001400715C0 KiSystemServiceHandler proc near
+.text:00000001400715C0
+.text:00000001400715C0 var_18          = qword ptr -18h
+.text:00000001400715C0 var_10          = qword ptr -10h
+.text:00000001400715C0
+.text:00000001400715C0                 sub     rsp, 38h
+.text:00000001400715C4                 test    dword ptr [rcx+4], 66h
+.text:00000001400715CB                 jnz     short loc_140071646
+.text:00000001400715CD                 lea     rax, KiSystemServiceGdiTebAccess
+.text:00000001400715D4                 cmp     rax, [rcx+10h]
+.text:00000001400715D8                 jz      short loc_1400715F4
+.text:00000001400715DA                 lea     rax, KiSystemServiceCopyStart
+.text:00000001400715E1                 cmp     rax, [rcx+10h]
+.text:00000001400715E5                 ja      short loc_140071614
+.text:00000001400715E7                 lea     rax, KiSystemServiceCopyEnd
+.text:00000001400715EE                 cmp     rax, [rcx+10h]
+.text:00000001400715F2                 jbe     short loc_140071614
+.text:00000001400715F4
+.text:00000001400715F4 loc_1400715F4:                          ; CODE XREF: KiSystemServiceHandler+18j
+.text:00000001400715F4                 and     [rsp+38h+var_10], 0
+.text:00000001400715FA                 mov     [rsp+38h+var_18], r8
+.text:00000001400715FF                 mov     r9d, [rcx]
+.text:0000000140071602                 mov     r8, rcx
+.text:0000000140071605                 mov     rcx, rdx
+.text:0000000140071608                 lea     rdx, KiSystemServiceExit
+.text:000000014007160F                 call    RtlUnwindEx
+.text:0000000140071614
+.text:0000000140071614 loc_140071614:                          ; CODE XREF: KiSystemServiceHandler+25j
+.text:0000000140071614                                         ; KiSystemServiceHandler+32j
+.text:0000000140071614                 mov     rax, gs:188h
+.text:000000014007161D                 cmp     byte ptr [rax+22Ah], 0
+.text:0000000140071624                 jz      short loc_14007163C
+.text:0000000140071626                 xor     r10, r10
+.text:0000000140071629                 mov     r9, r8
+.text:000000014007162C                 mov     r8, [rcx+10h]
+.text:0000000140071630                 mov     edx, [rcx]
+.text:0000000140071632                 mov     ecx, 3Bh
+.text:0000000140071637                 call    KiBugCheckDispatch
+.text:000000014007163C ; ---------------------------------------------------------------------------
+.text:000000014007163C
+.text:000000014007163C loc_14007163C:                          ; CODE XREF: KiSystemServiceHandler+64j
+.text:000000014007163C                                         ; KiSystemServiceHandler+8Dj ...
+.text:000000014007163C                 mov     eax, 1
+.text:0000000140071641                 add     rsp, 38h
+.text:0000000140071645                 retn
+.text:0000000140071646 ; ---------------------------------------------------------------------------
+.text:0000000140071646
+.text:0000000140071646 loc_140071646:                          ; CODE XREF: KiSystemServiceHandler+Bj
+.text:0000000140071646                 test    dword ptr [rcx+4], 20h
+.text:000000014007164D                 jnz     short loc_14007163C
+.text:000000014007164F                 mov     rax, gs:188h
+.text:0000000140071658                 cmp     byte ptr [rax+22Ah], 0
+.text:000000014007165F                 jz      short loc_14007166B
+.text:0000000140071661                 mov     ecx, 3Ah
+.text:0000000140071666                 call    KiBugCheckDispatch
+.text:000000014007166B ; ---------------------------------------------------------------------------
+.text:000000014007166B
+.text:000000014007166B loc_14007166B:                          ; CODE XREF: KiSystemServiceHandler+9Fj
+.text:000000014007166B                 mov     rcx, [rax+90h]
+.text:0000000140071672                 mov     rdx, [rcx+138h]
+.text:0000000140071679                 mov     [rax+90h], rdx
+.text:0000000140071680                 mov     dl, [rcx+28h]
+.text:0000000140071683                 mov     [rax+22Ah], dl
+.text:0000000140071689                 jmp     short loc_14007163C
+.text:0000000140071689 KiSystemServiceHandler endp
+
+
+----------- SNIIIIIIIIIIIIIIIIIP (the rest is continuous) ------------------
+
+
+
+.text:000000014007185E KiSystemServiceStart proc near          ; DATA XREF: KiServiceInternal+5Ao
+.text:000000014007185E                                         ; .data:000000014023AF18o
+.text:000000014007185E                 mov     [rbx+90h], rsp
+.text:0000000140071865                 mov     edi, eax
+.text:0000000140071867                 shr     edi, 7
+.text:000000014007186A                 and     edi, 20h
+.text:000000014007186D                 and     eax, 0FFFh
+.text:000000014007186D KiSystemServiceStart endp ; sp-analysis failed
+.text:000000014007186D
+.text:0000000140071872
+.text:0000000140071872 ; =============== S U B R O U T I N E =======================================
+.text:0000000140071872
+.text:0000000140071872
+.text:0000000140071872 KiSystemServiceRepeat proc near         ; CODE XREF: KiSystemServiceExit+1E6j
+.text:0000000140071872                 lea     r10, KeServiceDescriptorTable
+.text:0000000140071879                 lea     r11, KeServiceDescriptorTableShadow
+.text:0000000140071880                 test    dword ptr [rbx+78h], 40h
+.text:0000000140071887                 cmovnz  r10, r11
+.text:000000014007188B                 cmp     eax, [rdi+r10+10h]
+.text:0000000140071890                 jnb     loc_140071B88
+.text:0000000140071896                 mov     r10, [rdi+r10]
+.text:000000014007189A                 movsxd  r11, dword ptr [r10+rax*4]
+.text:000000014007189E                 mov     rax, r11
+.text:00000001400718A1                 sar     r11, 4
+.text:00000001400718A5                 add     r10, r11
+.text:00000001400718A8                 cmp     edi, 20h
+.text:00000001400718AB                 jnz     short loc_140071900
+.text:00000001400718AD                 mov     r11, [rbx+0F0h]
+.text:00000001400718AD KiSystemServiceRepeat endp ; sp-analysis failed
+.text:00000001400718AD
+.text:00000001400718B4
+.text:00000001400718B4 ; =============== S U B R O U T I N E =======================================
+.text:00000001400718B4
+.text:00000001400718B4
+.text:00000001400718B4 KiSystemServiceGdiTebAccess proc near   ; DATA XREF: KiSystemServiceHandler+Do
+.text:00000001400718B4
+.text:00000001400718B4 arg_10          = byte ptr  18h
+.text:00000001400718B4
+.text:00000001400718B4                 cmp     dword ptr [r11+1740h], 0
+.text:00000001400718BC                 jz      short loc_140071900
+.text:00000001400718BE                 mov     [rbp-50h], rax
+.text:00000001400718C2                 mov     [rbp-48h], rcx
+.text:00000001400718C6                 mov     [rbp-40h], rdx
+.text:00000001400718CA                 mov     rbx, r8
+.text:00000001400718CD                 mov     rdi, r9
+.text:00000001400718D0                 mov     rsi, r10
+.text:00000001400718D3                 mov     rcx, 7
+.text:00000001400718DA                 xor     rdx, rdx
+.text:00000001400718DD                 xor     r8, r8
+.text:00000001400718E0                 xor     r9, r9
+.text:00000001400718E3                 call    PsInvokeWin32Callout
+.text:00000001400718E8                 mov     rax, [rbp-50h]
+.text:00000001400718EC                 mov     rcx, [rbp-48h]
+.text:00000001400718F0                 mov     rdx, [rbp-40h]
+.text:00000001400718F4                 mov     r8, rbx
+.text:00000001400718F7                 mov     r9, rdi
+.text:00000001400718FA                 mov     r10, rsi
+.text:00000001400718FD                 nop     dword ptr [rax]
+.text:0000000140071900
+.text:0000000140071900 loc_140071900:                          ; CODE XREF: KiSystemServiceRepeat+39j
+.text:0000000140071900                                         ; KiSystemServiceGdiTebAccess+8j
+.text:0000000140071900                 and     eax, 0Fh
+.text:0000000140071903                 jz      KiSystemServiceCopyEnd
+.text:0000000140071909                 shl     eax, 3
+.text:000000014007190C                 lea     rsp, [rsp-70h]
+.text:0000000140071911                 lea     rdi, [rsp+arg_10]
+.text:0000000140071916                 mov     rsi, [rbp+100h]
+.text:000000014007191D                 lea     rsi, [rsi+20h]
+.text:0000000140071921                 test    byte ptr [rbp+0F0h], 1
+.text:0000000140071928                 jz      short loc_140071940
+.text:000000014007192A                 cmp     rsi, cs:MmUserProbeAddress
+.text:0000000140071931                 cmovnb  rsi, cs:MmUserProbeAddress
+.text:0000000140071939                 nop     dword ptr [rax+00000000h]
+.text:0000000140071940
+.text:0000000140071940 loc_140071940:                          ; CODE XREF: KiSystemServiceGdiTebAccess+74j
+.text:0000000140071940                 lea     r11, KiSystemServiceCopyEnd
+.text:0000000140071947                 sub     r11, rax
+.text:000000014007194A                 jmp     r11
+.text:000000014007194A KiSystemServiceGdiTebAccess endp
+.text:000000014007194A
+.text:000000014007194A ; ---------------------------------------------------------------------------
+.text:000000014007194D                 align 10h
+.text:0000000140071950
+.text:0000000140071950 ; =============== S U B R O U T I N E =======================================
+.text:0000000140071950
+.text:0000000140071950
+.text:0000000140071950 KiSystemServiceCopyStart proc near      ; DATA XREF: KiSystemServiceHandler+1Ao
+.text:0000000140071950                 mov     rax, [rsi+70h]
+.text:0000000140071954                 mov     [rdi+70h], rax
+.text:0000000140071958                 mov     rax, [rsi+68h]
+.text:000000014007195C                 mov     [rdi+68h], rax
+.text:0000000140071960                 mov     rax, [rsi+60h]
+.text:0000000140071964                 mov     [rdi+60h], rax
+.text:0000000140071968                 mov     rax, [rsi+58h]
+.text:000000014007196C                 mov     [rdi+58h], rax
+.text:0000000140071970                 mov     rax, [rsi+50h]
+.text:0000000140071974                 mov     [rdi+50h], rax
+.text:0000000140071978                 mov     rax, [rsi+48h]
+.text:000000014007197C                 mov     [rdi+48h], rax
+.text:0000000140071980                 mov     rax, [rsi+40h]
+.text:0000000140071984                 mov     [rdi+40h], rax
+.text:0000000140071988                 mov     rax, [rsi+38h]
+.text:000000014007198C                 mov     [rdi+38h], rax
+.text:0000000140071990                 mov     rax, [rsi+30h]
+.text:0000000140071994                 mov     [rdi+30h], rax
+.text:0000000140071998                 mov     rax, [rsi+28h]
+.text:000000014007199C                 mov     [rdi+28h], rax
+.text:00000001400719A0                 mov     rax, [rsi+20h]
+.text:00000001400719A4                 mov     [rdi+20h], rax
+.text:00000001400719A8                 mov     rax, [rsi+18h]
+.text:00000001400719AC                 mov     [rdi+18h], rax
+.text:00000001400719B0                 mov     rax, [rsi+10h]
+.text:00000001400719B4                 mov     [rdi+10h], rax
+.text:00000001400719B8                 mov     rax, [rsi+8]
+.text:00000001400719BC                 mov     [rdi+8], rax
+.text:00000001400719BC KiSystemServiceCopyStart endp ; sp-analysis failed
+.text:00000001400719BC
+.text:00000001400719C0
+.text:00000001400719C0 ; =============== S U B R O U T I N E =======================================
+.text:00000001400719C0
+.text:00000001400719C0
+.text:00000001400719C0 KiSystemServiceCopyEnd proc near        ; CODE XREF: KiSystemServiceGdiTebAccess+4Fj
+.text:00000001400719C0                                         ; DATA XREF: KiSystemServiceHandler+27o ...
+.text:00000001400719C0                 test    cs:dword_14030B088, 40h
+.text:00000001400719CA                 jnz     loc_140071C26
+.text:00000001400719D0                 call    r10
+.text:00000001400719D3
+.text:00000001400719D3 loc_1400719D3:                          ; CODE XREF: KiSystemServiceExit+2A0j
+.text:00000001400719D3                 inc     dword ptr gs:2E38h
+.text:00000001400719D3 KiSystemServiceCopyEnd endp ; sp-analysis failed
+.text:00000001400719D3
+.text:00000001400719DB
+.text:00000001400719DB ; =============== S U B R O U T I N E =======================================
+.text:00000001400719DB
+.text:00000001400719DB
+.text:00000001400719DB KiSystemServiceExit proc near           ; CODE XREF: KiSystemServiceExit+207j
+.text:00000001400719DB                                         ; KiSystemServiceExit+212j
+.text:00000001400719DB                                         ; DATA XREF: ...
+.text:00000001400719DB
+.text:00000001400719DB var_30          = qword ptr -30h
+.text:00000001400719DB var_28          = qword ptr -28h
+.text:00000001400719DB var_20          = qword ptr -20h
+.text:00000001400719DB var_18          = qword ptr -18h
+.text:00000001400719DB var_10          = qword ptr -10h
+.text:00000001400719DB arg_F8          = qword ptr  100h
+.text:00000001400719DB
+.text:00000001400719DB                 mov     rbx, [rbp+0C0h]
+.text:00000001400719E2                 mov     rdi, [rbp+0C8h]
+.text:00000001400719E9                 mov     rsi, [rbp+0D0h]
+.text:00000001400719F0                 mov     r11, gs:188h
+.text:00000001400719F9                 test    byte ptr [rbp+0F0h], 1
+.text:0000000140071A00                 jz      loc_140071B5B
+.text:0000000140071A06                 mov     rcx, cr8
+.text:0000000140071A0A                 or      cl, [r11+23Ah]
+.text:0000000140071A11                 or      ecx, [r11+1DCh]
+.text:0000000140071A18                 jnz     loc_140071BF2
+.text:0000000140071A1E                 cli
+.text:0000000140071A1F                 mov     rcx, gs:188h
+.text:0000000140071A28                 cmp     byte ptr [rcx+0C2h], 0
+.text:0000000140071A2F                 jz      short loc_140071A88
+.text:0000000140071A31                 mov     [rbp-50h], rax
+.text:0000000140071A35                 xor     eax, eax
+.text:0000000140071A37                 mov     [rbp-48h], rax
+.text:0000000140071A3B                 mov     [rbp-40h], rax
+.text:0000000140071A3F                 mov     [rbp-38h], rax
+.text:0000000140071A43                 mov     [rbp-30h], rax
+.text:0000000140071A47                 mov     [rbp-28h], rax
+.text:0000000140071A4B                 mov     [rbp-20h], rax
+.text:0000000140071A4F                 pxor    xmm0, xmm0
+.text:0000000140071A53                 movaps  xmmword ptr [rbp-10h], xmm0
+.text:0000000140071A57                 movaps  xmmword ptr [rbp+0], xmm0
+.text:0000000140071A5B                 movaps  xmmword ptr [rbp+10h], xmm0
+.text:0000000140071A5F                 movaps  xmmword ptr [rbp+20h], xmm0
+.text:0000000140071A63                 movaps  xmmword ptr [rbp+30h], xmm0
+.text:0000000140071A67                 movaps  xmmword ptr [rbp+40h], xmm0
+.text:0000000140071A6B                 mov     ecx, 1
+.text:0000000140071A70                 mov     cr8, rcx
+.text:0000000140071A74                 sti
+.text:0000000140071A75                 call    KiInitiateUserApc
+.text:0000000140071A7A                 cli
+.text:0000000140071A7B                 mov     ecx, 0
+.text:0000000140071A80                 mov     cr8, rcx
+.text:0000000140071A84                 mov     rax, [rbp-50h]
+.text:0000000140071A88
+.text:0000000140071A88 loc_140071A88:                          ; CODE XREF: KiSystemServiceExit+54j
+.text:0000000140071A88                 mov     rcx, gs:188h
+.text:0000000140071A91                 test    dword ptr [rcx], 40010000h
+.text:0000000140071A97                 jz      short loc_140071AC7
+.text:0000000140071A99                 mov     [rbp-50h], rax
+.text:0000000140071A9D                 test    byte ptr [rcx+2], 1
+.text:0000000140071AA1                 jz      short loc_140071AB1
+.text:0000000140071AA3                 call    KiCopyCounters
+.text:0000000140071AA8                 mov     rcx, gs:188h
+.text:0000000140071AB1
+.text:0000000140071AB1 loc_140071AB1:                          ; CODE XREF: KiSystemServiceExit+C6j
+.text:0000000140071AB1                 test    byte ptr [rcx+3], 40h
+.text:0000000140071AB5                 jz      short loc_140071AC3
+.text:0000000140071AB7                 lea     rsp, [rbp-80h]
+.text:0000000140071ABB                 xor     rcx, rcx
+.text:0000000140071ABE                 call    KiUmsExit
+.text:0000000140071AC3
+.text:0000000140071AC3 loc_140071AC3:                          ; CODE XREF: KiSystemServiceExit+DAj
+.text:0000000140071AC3                 mov     rax, [rbp-50h]
+.text:0000000140071AC7
+.text:0000000140071AC7 loc_140071AC7:                          ; CODE XREF: KiSystemServiceExit+BCj
+.text:0000000140071AC7                 ldmxcsr dword ptr [rbp-54h]
+.text:0000000140071ACB                 xor     r10, r10
+.text:0000000140071ACE                 cmp     word ptr [rbp+80h], 0
+.text:0000000140071AD6                 jz      short loc_140071B19
+.text:0000000140071AD8                 mov     [rbp-50h], rax
+.text:0000000140071ADC                 call    KiRestoreDebugRegisterState
+.text:0000000140071AE1                 mov     rax, gs:188h
+.text:0000000140071AEA                 mov     rax, [rax+0B8h]
+.text:0000000140071AF1                 mov     rax, [rax+1B0h]
+.text:0000000140071AF8                 or      rax, rax
+.text:0000000140071AFB                 jz      short loc_140071B15
+.text:0000000140071AFD                 cmp     word ptr [rbp+0F0h], 33h
+.text:0000000140071B05                 jnz     short loc_140071B15
+.text:0000000140071B07                 mov     r10, [rbp+0E8h]
+.text:0000000140071B0E                 mov     [rbp+0E8h], rax
+.text:0000000140071B15
+.text:0000000140071B15 loc_140071B15:                          ; CODE XREF: KiSystemServiceExit+120j
+.text:0000000140071B15                                         ; KiSystemServiceExit+12Aj
+.text:0000000140071B15                 mov     rax, [rbp-50h]
+.text:0000000140071B19
+.text:0000000140071B19 loc_140071B19:                          ; CODE XREF: KiSystemServiceExit+FBj
+.text:0000000140071B19                 mov     r8, [rbp+100h]
+.text:0000000140071B20                 mov     r9, [rbp+0D8h]
+.text:0000000140071B27                 xor     edx, edx
+.text:0000000140071B29                 pxor    xmm0, xmm0
+.text:0000000140071B2D                 pxor    xmm1, xmm1
+.text:0000000140071B31                 pxor    xmm2, xmm2
+.text:0000000140071B35                 pxor    xmm3, xmm3
+.text:0000000140071B39                 pxor    xmm4, xmm4
+.text:0000000140071B3D                 pxor    xmm5, xmm5
+.text:0000000140071B41                 mov     rcx, [rbp+0E8h]
+.text:0000000140071B48                 mov     r11, [rbp+0F8h]
+.text:0000000140071B4F                 mov     rbp, r9
+.text:0000000140071B52                 mov     rsp, r8
+.text:0000000140071B55                 swapgs
+.text:0000000140071B58                 sysret
+.text:0000000140071B5B
+.text:0000000140071B5B loc_140071B5B:                          ; CODE XREF: KiSystemServiceExit+25j
+.text:0000000140071B5B                 mov     rdx, [rbp+0B8h]
+.text:0000000140071B62                 mov     [r11+90h], rdx
+.text:0000000140071B69                 mov     dl, [rbp-58h]
+.text:0000000140071B6C                 mov     [r11+22Ah], dl
+.text:0000000140071B73                 cli
+.text:0000000140071B74                 mov     rsp, rbp
+.text:0000000140071B77                 mov     rbp, [rbp+0D8h]
+.text:0000000140071B7E                 mov     rsp, [rsp+arg_F8]
+.text:0000000140071B86                 sti
+.text:0000000140071B87                 retn
+.text:0000000140071B88 ; ---------------------------------------------------------------------------
+.text:0000000140071B88
+.text:0000000140071B88 loc_140071B88:                          ; CODE XREF: KiSystemServiceRepeat+1Ej
+.text:0000000140071B88                 cmp     edi, 20h
+.text:0000000140071B8B                 jnz     short loc_140071BE8
+.text:0000000140071B8D                 mov     [rbp-80h], eax
+.text:0000000140071B90                 mov     [rbp-78h], rcx
+.text:0000000140071B94                 mov     [rbp-70h], rdx
+.text:0000000140071B98                 mov     [rbp-68h], r8
+.text:0000000140071B9C                 mov     [rbp-60h], r9
+.text:0000000140071BA0                 call    KiConvertToGuiThread
+.text:0000000140071BA5                 or      eax, eax
+.text:0000000140071BA7                 mov     eax, [rbp-80h]
+.text:0000000140071BAA                 mov     rcx, [rbp-78h]
+.text:0000000140071BAE                 mov     rdx, [rbp-70h]
+.text:0000000140071BB2                 mov     r8, [rbp-68h]
+.text:0000000140071BB6                 mov     r9, [rbp-60h]
+.text:0000000140071BBA                 mov     [rbx+90h], rsp
+.text:0000000140071BC1                 jz      KiSystemServiceRepeat
+.text:0000000140071BC7                 lea     rdi, unk_14030B9E0
+.text:0000000140071BCE                 mov     esi, [rdi+10h]
+.text:0000000140071BD1                 mov     rdi, [rdi]
+.text:0000000140071BD4                 cmp     eax, esi
+.text:0000000140071BD6                 jnb     short loc_140071BE8
+.text:0000000140071BD8                 lea     rdi, [rdi+rsi*4]
+.text:0000000140071BDC                 movsx   eax, byte ptr [rax+rdi]
+.text:0000000140071BE0                 or      eax, eax
+.text:0000000140071BE2                 jle     KiSystemServiceExit
+.text:0000000140071BE8
+.text:0000000140071BE8 loc_140071BE8:                          ; CODE XREF: KiSystemServiceExit+1B0j
+.text:0000000140071BE8                                         ; KiSystemServiceExit+1FBj
+.text:0000000140071BE8                 mov     eax, 0C000001Ch
+.text:0000000140071BED                 jmp     KiSystemServiceExit
+.text:0000000140071BF2 ; ---------------------------------------------------------------------------
+.text:0000000140071BF2
+.text:0000000140071BF2 loc_140071BF2:                          ; CODE XREF: KiSystemServiceExit+3Dj
+.text:0000000140071BF2                 mov     ecx, 4Ah
+.text:0000000140071BF7                 xor     r9d, r9d
+.text:0000000140071BFA                 mov     r8, cr8
+.text:0000000140071BFE                 or      r8d, r8d
+.text:0000000140071C01                 jnz     short loc_140071C17
+.text:0000000140071C03                 mov     ecx, 1
+.text:0000000140071C08                 movzx   r8d, byte ptr [r11+23Ah]
+.text:0000000140071C10                 mov     r9d, [r11+1DCh]
+.text:0000000140071C17
+.text:0000000140071C17 loc_140071C17:                          ; CODE XREF: KiSystemServiceExit+226j
+.text:0000000140071C17                 mov     rdx, [rbp+0E8h]
+.text:0000000140071C1E                 mov     r10, rbp
+.text:0000000140071C21                 call    KiBugCheckDispatch
+.text:0000000140071C26 ; ---------------------------------------------------------------------------
+.text:0000000140071C26
+.text:0000000140071C26 loc_140071C26:                          ; CODE XREF: KiSystemServiceCopyEnd+Aj
+.text:0000000140071C26                 sub     rsp, 50h
+.text:0000000140071C2A                 mov     [rsp+50h+var_30], rcx
+.text:0000000140071C2F                 mov     [rsp+50h+var_28], rdx
+.text:0000000140071C34                 mov     [rsp+50h+var_20], r8
+.text:0000000140071C39                 mov     [rsp+50h+var_18], r9
+.text:0000000140071C3E                 mov     [rsp+50h+var_10], r10
+.text:0000000140071C43                 mov     rcx, r10
+.text:0000000140071C46                 call    PerfInfoLogSysCallEntry
+.text:0000000140071C4B                 mov     rcx, [rsp+50h+var_30]
+.text:0000000140071C50                 mov     rdx, [rsp+50h+var_28]
+.text:0000000140071C55                 mov     r8, [rsp+50h+var_20]
+.text:0000000140071C5A                 mov     r9, [rsp+50h+var_18]
+.text:0000000140071C5F                 mov     r10, [rsp+50h+var_10]
+.text:0000000140071C64                 add     rsp, 50h
+.text:0000000140071C68                 call    r10
+.text:0000000140071C6B                 mov     [rbp-50h], rax
+.text:0000000140071C6F                 mov     rcx, rax
+.text:0000000140071C72                 call    PerfInfoLogSysCallExit
+.text:0000000140071C77                 mov     rax, [rbp-50h]
+.text:0000000140071C7B                 jmp     loc_1400719D3
+

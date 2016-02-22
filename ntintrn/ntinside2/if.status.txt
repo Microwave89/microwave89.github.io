@@ -1,0 +1,14 @@
+Basic disasm		
+
+	test    eax,eax					if(!eax) goto noerror;
+	jns     noerror
+
+error:
+	mov eax, 0xC???????
+	ret
+
+noerror:
+	ret
+
+test r9d, 0b11111111111111111111111111111101		if(r9d && (r9d != bit1)) goto error; ///
+jne error
