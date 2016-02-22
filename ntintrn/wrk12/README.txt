@@ -1,5 +1,5 @@
 These files are for educational and non-commercial use only!
-Read the LICENSE.txt under https://microwave89.github.io/ntintrn/LICENSE.txt
+Read the LICENSE.txt under https://microwave89.github.io/ntintrn/wrk12/LICENSE.txt
 
 Downloaded from https://github.com/hacksysteam/WRK-1.2
 
